@@ -1,4 +1,6 @@
-var targetMenu = document.querySelector(".targetMenu");
+
+
+        var targetMenu = document.querySelector(".targetMenu");
         var onTaget = document.querySelectorAll(".targetMenu ul li");
         var section = document.querySelectorAll("section");
         var sectionCounter = 0; 
@@ -25,7 +27,6 @@ var targetMenu = document.querySelector(".targetMenu");
             setTimeout(activeMenu,300);
             onTargetMenu();
 
-            if(sectionCounter != 2 && tn == 1) tn = 0;
         }
 
         function activeMenu(){
@@ -48,32 +49,6 @@ var targetMenu = document.querySelector(".targetMenu");
             onTaget[sectionCounter].children[0].classList.add("on");
         }
 
-        window.addEventListener('load', roImg);
-        section[2].addEventListener('wheel', roImg);
-        var ibox = document.querySelectorAll(".ibox");
-        var icount = 0;
-        var tn = 0;
-
-        function roImg(e){
-            if(e.wheelDelta>0) return;
-            if(tn) return;
-            icount--;
-            ibox[0].style.transform = `rotate(${icount}deg) translateX(400px)`;
-            ibox[1].style.transform = `rotate(${icount+30}deg) translateX(400px)`;
-            ibox[2].style.transform = `rotate(${icount+60}deg) translateX(400px)`;
-            ibox[3].style.transform = `rotate(${icount+90}deg) translateX(400px)`;
-            if(icount<-90 && tn == 0 ){
-                icount = 0;
-                ibox[0].style.transform = `rotate(${icount}deg) translateX(400px)`;
-                ibox[1].style.transform = `rotate(${icount+30}deg) translateX(400px)`;
-                ibox[2].style.transform = `rotate(${icount+60}deg) translateX(400px)`;
-                ibox[3].style.transform = `rotate(${icount+90}deg) translateX(400px)`;
-                tn = 1;
-            }else{
-                count = 0;
-            }
-        }
-
         // 스크롤 막기 시작
         $('html, body').css({'overflow': 'hidden', 'height': '100%'});
         $('#element').on('scroll touchmove mousewheel', function(event) {
@@ -82,3 +57,94 @@ var targetMenu = document.querySelector(".targetMenu");
         return false;
         });
         //스크롤 막기 끝
+
+        //차트
+        $('.skillchart').click(
+            function(){
+                $(this).easyPieChart({
+                    barColor: '#69f',
+                    trackColor: '#ccc',
+                    scaleColor: '#fff',
+                    lineCap: 'butt',
+                    lineWidth: 10,
+                    size: 100,
+                    animate: 1000
+                });
+                var jumsu = $(this).attr('data-percent');
+                $(this).children().children('.jumsu').html(jumsu);
+            }
+        );
+
+        /* 겔러리 슬라이드 */
+        var imgWidth = document.querySelector("#galleryZone li").clientWidth;
+		var gallMove = document.querySelector("#galleryZone ul");
+		var gallZone = document.querySelectorAll("#galleryZone img");
+		var arrow = document.querySelectorAll(".arrow");
+        		
+		gallZone.forEach((e)=>{e.addEventListener('mouseover',stop)});
+        gallZone.forEach((e)=>{e.addEventListener('mouseout',start)});
+
+		var interval;
+		var aniStartPoint;
+		var aniEndPoint;
+		var gcount = 0;
+		var slideon = "on";
+
+		function start(){
+			interval = setInterval(go, 3000);
+			arrow[0].style.opacity = "0";
+			arrow[1].style.opacity = "0";
+		}
+
+		function go(){
+			if(slideon == "on"){
+
+				slideon = "off";
+
+				if(gcount == 4) gcount = 0;
+
+				aniStartPoint = -imgWidth * gcount;
+				gcount++;
+				aniEndPoint = -imgWidth * gcount;
+
+				goAni();
+			}
+		}
+
+		function left(){
+			if(slideon == "on"){
+
+				slideon = "off";
+
+				if(gcount == 0) gcount = 4;
+
+				aniStartPoint = -imgWidth * gcount;
+				gcount--;
+				aniEndPoint = -imgWidth * gcount;
+
+				goAni();
+			}
+		}
+
+		function goAni(){
+			var ani = gallMove.animate([
+				{
+					transform:"translateX(" + aniStartPoint + "px)"
+				},{
+					transform:"translateX(" + aniEndPoint + "px)"
+				}
+			],1000);
+
+			ani.addEventListener('finish',function(){
+				gallMove.style.transform = "translateX(" + aniEndPoint + "px)";
+				slideon = "on";
+			});
+		}
+
+		function stop(){
+			clearInterval(interval);
+			arrow[0].style.opacity = "0.3";
+			arrow[1].style.opacity = "0.3";
+		}
+
+        
